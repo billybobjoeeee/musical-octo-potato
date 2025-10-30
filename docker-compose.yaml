@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./server
+    container_name: musical_octo_potato_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    networks:
+      - myapp-net
+
+  # frontend:
+  #   build: ./client
+  #   container_name: musical_octo_potato_frontend
+  #   ports:
+  #     - "3000:80"
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - myapp-net
+
+
+networks:
+  myapp-net:
