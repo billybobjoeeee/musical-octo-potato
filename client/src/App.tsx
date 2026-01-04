@@ -1,34 +1,54 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { useEffect, useState } from 'react'
+import myLogo from './assets/react.svg'
+import Button from './Button.tsx'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [groupCount, setgroupCount] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchBoxes = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/count');
+        const data = await response.json();
+
+        setgroupCount(data.count);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    };
+
+    fetchBoxes();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    // Right Column
+    <div className="flex flex-row w-full">
+    <div className="flex flex-col items-center min-h-screen gap-0 bg-green-850 w-21">
+      <a className="py-2" href="index.html">
+        <img src={myLogo} alt="Uh Oh!" className="w-15 h-20"/>
+      </a>
+      <Button text="Dashboard" icon={myLogo}/>
+      <Button text="Browse" icon={myLogo}/>
+    </div>
+    <div className="flex flex-col min-h-screen bg-white w-full pl-12">
+      <div className='flex flex-row justify-between items-center gap-120 pt-8 w-full h-25
+      border-b border-gray-300 pb-8
+      '>
+        <span className='text-4xl font-semibold'>Dashboard</span>
+        <Button text="Test" icon={myLogo}/>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div className='flex flex-row min-h-screen w-full pt-6 gap-10'>
+        {/* Group Cards */}
+        {Array.from({length: groupCount}).map((_, index) => (
+          <div key={index} className='w-65 h-66 bg-blue-200 rounded-md hover:bg-blue-300 transition-colors duration-300'>
+            <p className='p-4'>Box #{index+1}</p>
+          </div>
+        ))}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
+    </div>
   )
 }
 
